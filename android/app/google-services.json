@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "246446001659",
+    "project_id": "maxfit-dev-2023",
+    "storage_bucket": "maxfit-dev-2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246446001659:android:9e4b629e36a587b0460f5e",
+        "android_client_info": {
+          "package_name": "com.beezonru.maxfit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246446001659-g6i6trllesdao680u5678c3q9t3ntf99.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOng5XnqXNugnLIF0N88G_CWsSJXgkxvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246446001659-g6i6trllesdao680u5678c3q9t3ntf99.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

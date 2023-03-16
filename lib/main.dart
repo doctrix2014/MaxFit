@@ -1,25 +1,35 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:maxfit/screens/auth.dart';
+import 'package:maxfit/screens/landing.dart';
+import 'package:maxfit/services/auth.dart';
+import 'package:provider/provider.dart';
+import 'domain/user.dart';
 
+// void main() {
+//   runApp(MaxFitApp());
+// }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaxFitApp());
 }
 
 class MaxFitApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Max Fitness',
-        theme: ThemeData(
-            primaryColor: Color.fromRGBO(50, 65, 85, 1),
-            textTheme: const TextTheme(
-                titleLarge: TextStyle(color: Colors.white),
-                titleMedium: TextStyle(color: Colors.white),
-                titleSmall: TextStyle(color: Colors.white))),
-        home: AuthPage());
+    return StreamProvider<MyUser?>.value(
+        value: AuthService().currentUser,
+        initialData: null,
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Max Fitness',
+            theme: ThemeData(
+                primaryColor: const Color.fromRGBO(50, 65, 85, 1),
+                textTheme: const TextTheme(
+                    titleLarge: TextStyle(color: Colors.white),
+                    titleMedium: TextStyle(color: Colors.white),
+                    titleSmall: TextStyle(color: Colors.white))),
+            home: const LandingPage()));
   }
 }
-
-
