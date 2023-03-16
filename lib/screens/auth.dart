@@ -176,6 +176,7 @@ class _AuthPageState extends State<AuthPage> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).primaryColor,
       body: Column(
         children: <Widget>[
