@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../domain/workout.dart';
+import '../services/auth.dart';
+
+final AuthService _authService = AuthService();
 
 class HomePage extends StatelessWidget {
+
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -15,7 +18,20 @@ class HomePage extends StatelessWidget {
           title: Text('MaxFit'),
           leading: Icon(Icons.fitness_center),
         ),
-        body: WorkOutList(),
+        body: Column(children: [
+          Expanded(child: WorkOutList()),
+          Text('Привет,Славик:)',
+            style: TextStyle(color: Colors.white, fontSize: 20),),
+          SizedBox(width: 10,height: 10),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            child: Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: _buttonLogOut(context, 'Выйти', () { _authService.logOut();}),
+            ),
+          ),
+        ]),
       ),
     );
   }
@@ -86,6 +102,23 @@ class WorkOutList extends StatelessWidget {
   }
 }
 
+Widget _buttonLogOut(BuildContext context, String text, void Function() func) {
+  return ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.white,),
+    onPressed: () {
+      func();
+    },
+    child: Text(
+      text,
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Theme.of(context).primaryColor),
+    ),
+  );
+}
+
 Widget subtitle(BuildContext context, WorkOut workOut) {
   var color = Colors.grey;
   double indicatorLevel = 0;
@@ -111,8 +144,16 @@ Widget subtitle(BuildContext context, WorkOut workOut) {
             backgroundColor: Colors.white,
             value: indicatorLevel,
             valueColor: AlwaysStoppedAnimation(color),
-          )),SizedBox(width: 10,),
-      Expanded(flex: 3, child: Text(workOut.level, style: TextStyle(color: Colors.white),))
+          )),
+      SizedBox(
+        width: 10,
+      ),
+      Expanded(
+          flex: 3,
+          child: Text(
+            workOut.level,
+            style: TextStyle(color: Colors.white),
+          ))
     ],
   );
 }

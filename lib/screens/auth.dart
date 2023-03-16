@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:maxfit/domain/user.dart';
+import 'package:maxfit/services/auth.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -11,9 +15,11 @@ class _AuthPageState extends State<AuthPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-   late String _email;
-   late String _password;
+  late String _email;
+  late String _password;
   bool showLogin = true;
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +71,8 @@ class _AuthPageState extends State<AuthPage> {
 
     Widget _button(String text, void Function() func) {
       return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,),
         onPressed: () {
           func();
         },
@@ -84,13 +92,13 @@ class _AuthPageState extends State<AuthPage> {
           children: [
             Padding(
               padding: EdgeInsets.only(bottom: 10, top: 10),
-              child:
-                  _input(Icon(Icons.email), 'Электронная почта', _emailController, false),
+              child: _input(Icon(Icons.email), 'Электронная почта',
+                  _emailController, false),
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 10),
-              child: _input(
-                  Icon(Icons.lock), 'Пароль', _passwordController, true),
+              child:
+                  _input(Icon(Icons.lock), 'Пароль', _passwordController, true),
             ),
             SizedBox(
               height: 20,
@@ -108,12 +116,54 @@ class _AuthPageState extends State<AuthPage> {
       );
     }
 
-    void _buttonAction() {
+    Future<void> _loginButtonAction() async {
       _email = _emailController.text;
       _password = _passwordController.text;
-      _emailController.clear();
-      _passwordController.clear();
+
+      if (_email.isEmpty || _password.isEmpty) return;
+
+      User? user = (await _authService.signInEmailAndPassword(
+          _email.trim(), _password.trim())) as User?;
+      if (user == null) {
+        Fluttertoast.showToast(
+            msg: "Невозможно залогиниться! Проверьте электронную почту/пароль!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      } else {
+        _emailController.clear();
+        _passwordController.clear();
+      }
     }
+
+    Future<void> _registerButtonAction() async {
+      _email = _emailController.text;
+      _password = _passwordController.text;
+
+      if (_email.isEmpty || _password.isEmpty) return;
+
+      MyUser user = await _authService.registerInEmailAndPassword(
+          _email.trim(), _password.trim()) as MyUser;
+      if (user != null) {
+        Fluttertoast.showToast(
+            msg: "Невозможно зарегистрироваться! Проверьте электронную почту/пароль!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      } else {
+        _emailController.clear();
+        _passwordController.clear();
+      }
+    }
+
 
     Widget _buttomWave() {
       return Expanded(
@@ -130,10 +180,12 @@ class _AuthPageState extends State<AuthPage> {
       body: Column(
         children: <Widget>[
           _logo(),
-          const SizedBox(height: 100,),
+          const SizedBox(
+            height: 100,
+          ),
           (showLogin
               ? Column(children: <Widget>[
-                  _form('Войти', _buttonAction),
+                  _form('Войти', _loginButtonAction),
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: GestureDetector(
@@ -150,7 +202,7 @@ class _AuthPageState extends State<AuthPage> {
                   )
                 ])
               : Column(children: <Widget>[
-                  _form('Регистрация', _buttonAction),
+                  _form('Регистрация', _registerButtonAction),
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: GestureDetector(
