@@ -72,7 +72,8 @@ class _AuthPageState extends State<AuthPage> {
     Widget _button(String text, void Function() func) {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,),
+          backgroundColor: Colors.white,
+        ),
         onPressed: () {
           func();
         },
@@ -120,20 +121,29 @@ class _AuthPageState extends State<AuthPage> {
       _email = _emailController.text;
       _password = _passwordController.text;
 
-      if (_email.isEmpty || _password.isEmpty) return;
-
-      User? user = (await _authService.signInEmailAndPassword(
-          _email.trim(), _password.trim())) as User?;
-      if (user == null) {
+      if (_email.isEmpty || _password.isEmpty) {
         Fluttertoast.showToast(
-            msg: "Невозможно залогиниться! Проверьте электронную почту/пароль!",
+            msg: 'Электронная почта или пароль не могут быть пустыми!',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
+        return;
+      }
+
+      MyUser user = (await _authService.signInEmailAndPassword(
+          _email.trim(), _password.trim())) as MyUser;
+      if (user.id == '') {
+        Fluttertoast.showToast(
+            msg: user.errorText,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       } else {
         _emailController.clear();
         _passwordController.clear();
@@ -148,22 +158,21 @@ class _AuthPageState extends State<AuthPage> {
 
       MyUser user = await _authService.registerInEmailAndPassword(
           _email.trim(), _password.trim()) as MyUser;
-      if (user != null) {
+      if (user.id == '') {
         Fluttertoast.showToast(
-            msg: "Невозможно зарегистрироваться! Проверьте электронную почту/пароль!",
+            msg:
+            user.errorText,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
       } else {
         _emailController.clear();
         _passwordController.clear();
       }
     }
-
 
     Widget _buttomWave() {
       return Expanded(

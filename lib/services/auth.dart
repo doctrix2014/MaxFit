@@ -13,7 +13,10 @@ class AuthService {
       return MyUser.fromFirebase(user!);
     } catch (e) {
       print(e);
-      return null;
+      //return null;
+      String error = e.toString();
+      MyUser user = MyUser.error(error);
+      return user;
     }
   }
 
@@ -25,7 +28,10 @@ class AuthService {
       User? user = result.user;
       return MyUser.fromFirebase(user!);
     } catch (e) {
-      return null;
+      //return null;
+      String error = e.toString();
+      MyUser user = MyUser.error(error);
+      return user;
     }
   }
 
