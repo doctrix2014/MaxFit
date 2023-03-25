@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maxfit/screens/auth.dart';
+import 'package:maxfit/screens/authphone.dart';
 import 'package:maxfit/screens/home.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +12,6 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final MyUser? user = Provider.of<MyUser?>(context);
     final bool isLoggedIn = user != null;
-    return isLoggedIn ? HomePage() : AuthPage();
+    return isLoggedIn ? HomePage() : MyPhone();
   }
 }
