@@ -7,6 +7,8 @@ import 'package:maxfit/screens/verify.dart';
 import 'package:maxfit/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'domain/user.dart';
+import 'firebase_options.dart';
+import 'dart:io' show Platform;
 
 // void main() {
 //   runApp(MaxFitApp());
@@ -14,7 +16,11 @@ import 'domain/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp();
+  }else {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  }
   runApp(MaxFitApp());
 }
 
